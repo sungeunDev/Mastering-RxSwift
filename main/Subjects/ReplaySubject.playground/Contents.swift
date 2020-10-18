@@ -34,4 +34,23 @@ enum MyError: Error {
    case error
 }
 
+let rs = ReplaySubject<Int>.create(bufferSize: 3) //n개의 이벤트를 저장하는 버퍼를 함께 생성
+(1...10).forEach { rs.onNext($0) }
 
+rs.subscribe { print("Observer 1 >> ", $0) }
+    .disposed(by: disposeBag)
+
+rs.subscribe { print("Observer 2 >> ", $0) }
+    .disposed(by: disposeBag)
+
+rs.onNext(11)
+
+rs.subscribe { print("Observer 3 >> ", $0) }
+    .disposed(by: disposeBag)
+
+//rs.onCompleted()
+rs.onError(MyError.error)
+
+//종료 여부에 관계없이 버퍼에 저장된 값을 모두 전달한다.
+rs.subscribe { print("Observer 4 >> ", $0) }
+    .disposed(by: disposeBag)

@@ -35,3 +35,23 @@ enum MyError: Error {
    case error
 }
 
+let p = PublishSubject<Int>()
+p.subscribe { print("PublishSubject >>", $0) }
+    .disposed(by: disposeBag)
+
+print("-------------------- <Publish VS. Behavior> --------------------")
+
+let b = BehaviorSubject<Int>(value: 0) //가장 최근 데이터를 저장했다가 새로운 구독자에 전달
+b.subscribe { print("BehaviorSubject >>", $0) }
+    .disposed(by: disposeBag)
+
+b.onNext(1)
+
+b.subscribe { print("BehaviorSubject2 >>", $0) }
+    .disposed(by: disposeBag)
+
+//b.onCompleted()
+b.onError(MyError.error)
+
+b.subscribe { print("BehaviorSubject3 >>", $0) }
+    .disposed(by: disposeBag)

@@ -34,3 +34,19 @@ enum MyError: Error {
    case error
 }
 
+//이벤트 전달하는 시점에 차이가 있음
+//completed 이벤트가 전달되는 시점을 기준으로 가장 최근에 전달된 이벤트 값을 전달함
+
+let subject = AsyncSubject<Int>()
+
+subject.subscribe { print($0) }
+    .disposed(by: bag)
+
+subject.onNext(1)
+subject.onNext(2)
+subject.onNext(3)
+
+//subject.onCompleted()
+
+//에러를 방출하는 경우 어떤 이벤트도 방출하지 않음
+subject.onError(MyError.error)
